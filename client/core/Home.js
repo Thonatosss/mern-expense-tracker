@@ -47,10 +47,10 @@ export default function Home(){
                 Home Page
               </Typography>
               <CardMedia className={classes.media} image={unicornbikeImg} title="Unicorn Bicycle"/>
-              <Typography variant="body2" component="p" className={classes.credit} color="textSecondary">Photo by <a href="https://unsplash.com/@anniespratt" target="_blank" rel="noopener noreferrer">Annie Spratt</a> on Unsplash</Typography>
+              <Typography variant="body2" component="p" className={classes.credit} color="textSecondary"></Typography>
               <CardContent>
                 <Typography variant="body1" component="p">
-                  Welcome to the MERN Expense Tracker. <Link to='/signup'>Sign up</Link> or <Link to='/signin'>sign in</Link> to get started.
+                  Welcome to the MoneyMate Expense Tracker. <Link to='/signup'>Sign up</Link> or <Link to='/signin'>sign in</Link> to get started.
                 </Typography>
               </CardContent>
             </Card>)

@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, { useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
@@ -9,12 +9,12 @@ import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 import Edit from '@material-ui/icons/Edit'
 import auth from '../auth/auth-helper'
-import {listByUser, update} from './api-expense.js'
+import { listByUser, update } from './api-expense.js'
 import DeleteExpense from './DeleteExpense'
 import Icon from '@material-ui/core/Icon'
-import {Redirect} from 'react-router-dom'
+import { Redirect } from 'react-router-dom'
 import DateFnsUtils from '@date-io/date-fns'
-import { DatePicker, DateTimePicker, MuiPickersUtilsProvider} from "@material-ui/pickers"
+import { DatePicker, DateTimePicker, MuiPickersUtilsProvider } from "@material-ui/pickers"
 
 
 const useStyles = makeStyles(theme => ({
@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
   heading: {
     fontSize: '1.5em',
     fontWeight: theme.typography.fontWeightRegular,
-    
+
     marginTop: 12,
     marginBottom: 4
   },
@@ -43,199 +43,199 @@ const useStyles = makeStyles(theme => ({
     margin: 6
   },
   info: {
-      marginRight: 32,
-      width: 90
+    marginRight: 32,
+    width: 90
   },
   amount: {
     fontSize: '2em',
     color: '#2bbd7e',
   },
-  search:{
+  search: {
     display: 'flex',
     justifyContent: 'flex-end',
     alignItems: 'center'
   },
   textField: {
-    margin:'8px 16px',
-    width:240
+    margin: '8px 16px',
+    width: 240
   },
   buttons: {
-      textAlign:'right'
+    textAlign: 'right'
   },
   status: {
-      marginRight: 8
+    marginRight: 8
   },
   date: {
-      fontSize: '1.1em',
-      color: '#8b8b8b',
-      marginTop: 4
+    fontSize: '1.1em',
+    color: '#8b8b8b',
+    marginTop: 4
   }
 }))
 
 export default function Expenses() {
-    const classes = useStyles()
-    const [redirectToSignin, setRedirectToSignin] = useState(false)
-    const [saved, setSaved] = useState(false)
-    const [error, setError] = useState('')
-    const [expenses, setExpenses] = useState([])
-    const jwt = auth.isAuthenticated()
-    const date = new Date(), y = date.getFullYear(), m = date.getMonth()
-    const [firstDay, setFirstDay] = useState(new Date(y, m, 1))
-    const [lastDay, setLastDay] = useState(new Date(y, m + 1, 0))
-    useEffect(() => {
-        const abortController = new AbortController()
-        const signal = abortController.signal
-        listByUser({firstDay: firstDay, lastDay: lastDay},{t: jwt.token}, signal).then((data) => {
-          if (data.error) {
-            setRedirectToSignin(true)
-          } else {
-            setExpenses(data)
-          }
-        })
-        return function cleanup(){
-          abortController.abort()
-        }
-    }, [])
-    const handleSearchFieldChange = name => date => {
-        if(name=='firstDay'){
-            setFirstDay(date)
-        }else{
-            setLastDay(date)
-        }
-    }
-    const searchClicked = () => {
-        listByUser({firstDay: firstDay, lastDay: lastDay},{t: jwt.token}).then((data) => {
-            if (data.error) {
-              setRedirectToSignin(true)
-            } else {
-              setExpenses(data)
-            }
-        })
-    }
-    const handleChange = (name, index) => event => {
-        const updatedExpenses = [...expenses]
-        updatedExpenses[index][name] = event.target.value
-        setExpenses(updatedExpenses)
-    }
-    const handleDateChange = index => date => {
-        const updatedExpenses = [...expenses]
-        updatedExpenses[index].incurred_on = date
-        setExpenses(updatedExpenses)
+  const classes = useStyles()
+  const [redirectToSignin, setRedirectToSignin] = useState(false)
+  const [saved, setSaved] = useState(false)
+  const [error, setError] = useState('')
+  const [expenses, setExpenses] = useState([])
+  const jwt = auth.isAuthenticated()
+  const date = new Date(), y = date.getFullYear(), m = date.getMonth()
+  const [firstDay, setFirstDay] = useState(new Date(y, m, 1))
+  const [lastDay, setLastDay] = useState(new Date(y, m + 1, 0))
+  useEffect(() => {
+    const abortController = new AbortController()
+    const signal = abortController.signal
+    listByUser({ firstDay: firstDay, lastDay: lastDay }, { t: jwt.token }, signal).then((data) => {
+      if (data.error) {
+        setRedirectToSignin(true)
+      } else {
+        setExpenses(data)
       }
-    const clickUpdate = (index) => {
-        let expense = expenses[index]
-        update({
-            expenseId: expense._id
-          }, {
-            t: jwt.token
-          }, expense).then((data) => {
-            if (data.error) {
-              setError(data.error)
-            } else {
-              setSaved(true)
-              setTimeout(()=>{setSaved(false)}, 3000)
-            }
-        })
+    })
+    return function cleanup() {
+      abortController.abort()
     }
-    const removeExpense = (expense) => {
-        const updatedExpenses = [...expenses]
-        const index = updatedExpenses.indexOf(expense)
-        updatedExpenses.splice(index, 1)
-        setExpenses(updatedExpenses)
+  }, [])
+  const handleSearchFieldChange = name => date => {
+    if (name == 'firstDay') {
+      setFirstDay(date)
+    } else {
+      setLastDay(date)
     }
-    
-    if (redirectToSignin) {
-        return <Redirect to='/signin'/>
-    }
-    return (
-      <div className={classes.root}>
+  }
+  const searchClicked = () => {
+    listByUser({ firstDay: firstDay, lastDay: lastDay }, { t: jwt.token }).then((data) => {
+      if (data.error) {
+        setRedirectToSignin(true)
+      } else {
+        setExpenses(data)
+      }
+    })
+  }
+  const handleChange = (name, index) => event => {
+    const updatedExpenses = [...expenses]
+    updatedExpenses[index][name] = event.target.value
+    setExpenses(updatedExpenses)
+  }
+  const handleDateChange = index => date => {
+    const updatedExpenses = [...expenses]
+    updatedExpenses[index].incurred_on = date
+    setExpenses(updatedExpenses)
+  }
+  const clickUpdate = (index) => {
+    let expense = expenses[index]
+    update({
+      expenseId: expense._id
+    }, {
+      t: jwt.token
+    }, expense).then((data) => {
+      if (data.error) {
+        setError(data.error)
+      } else {
+        setSaved(true)
+        setTimeout(() => { setSaved(false) }, 3000)
+      }
+    })
+  }
+  const removeExpense = (expense) => {
+    const updatedExpenses = [...expenses]
+    const index = updatedExpenses.indexOf(expense)
+    updatedExpenses.splice(index, 1)
+    setExpenses(updatedExpenses)
+  }
+
+  if (redirectToSignin) {
+    return <Redirect to='/signin' />
+  }
+  return (
+    <div className={classes.root}>
       <div className={classes.search}>
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DatePicker
-                    disableFuture
-                    format="dd/MM/yyyy"
-                    label="SHOWING RECORDS FROM"
-                    className={classes.textField}
-                    views={["year", "month", "date"]}
-                    value={firstDay}
-                    onChange={handleSearchFieldChange('firstDay')}
-                />
-                <DatePicker
-                    format="dd/MM/yyyy"
-                    label="TO"
-                    className={classes.textField}
-                    views={["year", "month", "date"]}
-                    value={lastDay}
-                    onChange={handleSearchFieldChange('lastDay')}
-                />      
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <DatePicker
+            disableFuture
+            format="dd/MM/yyyy"
+            label="SHOWING RECORDS FROM"
+            className={classes.textField}
+            views={["year", "month", "date"]}
+            value={firstDay}
+            onChange={handleSearchFieldChange('firstDay')}
+          />
+          <DatePicker
+            format="dd/MM/yyyy"
+            label="TO"
+            className={classes.textField}
+            views={["year", "month", "date"]}
+            value={lastDay}
+            onChange={handleSearchFieldChange('lastDay')}
+          />
         </MuiPickersUtilsProvider>
         <Button variant="contained" color="secondary" onClick={searchClicked}>GO</Button>
-        </div>
-        
+      </div>
+
       {expenses.map((expense, index) => {
-            return   <span key={index}>
-        <ExpansionPanel className={classes.panel}>
-          <ExpansionPanelSummary
-            expandIcon={<Edit />}
-          >
-            <div className={classes.info}>
-                <Typography className={classes.amount}>$ {expense.amount}</Typography><Divider style={{marginTop: 4, marginBottom: 4}}/>
+        return <span key={index}>
+          <ExpansionPanel className={classes.panel}>
+            <ExpansionPanelSummary
+              expandIcon={<Edit />}
+            >
+              <div className={classes.info}>
+                <Typography className={classes.amount}>${expense.amount}</Typography><Divider style={{ marginTop: 4, marginBottom: 4 }} />
                 <Typography>
-                    {expense.category}
+                  {expense.category}
                 </Typography>
-                <Typography className={classes.date}>{new Date(expense.incurred_on).toLocaleDateString()}</Typography>  
-            </div>
-            <div>
+                <Typography className={classes.date}>{new Date(expense.incurred_on).toLocaleDateString()}</Typography>
+              </div>
+              <div>
                 <Typography className={classes.heading}>{expense.title}</Typography>
                 <Typography className={classes.notes}>
-                    {expense.notes}
+                  {expense.notes}
                 </Typography>
-            </div>
-          </ExpansionPanelSummary>
-          <Divider/>
-          <ExpansionPanelDetails style={{display: 'block'}}>
-          <div>
-              <TextField label="Title" className={classes.textField} value={expense.title} onChange={handleChange('title', index)} margin="normal"/>
-             <TextField label="Amount ($)" className={classes.textField} value={expense.amount} onChange={handleChange('amount', index)} margin="normal" type="number"/>
-          </div>
-          <div>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <DateTimePicker
+              </div>
+            </ExpansionPanelSummary>
+            <Divider />
+            <ExpansionPanelDetails style={{ display: 'block' }}>
+              <div>
+                <TextField label="Title" className={classes.textField} value={expense.title} onChange={handleChange('title', index)} margin="normal" />
+                <TextField label="Amount ($)" className={classes.textField} value={expense.amount} onChange={handleChange('amount', index)} margin="normal" type="number" />
+              </div>
+              <div>
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                  <DateTimePicker
                     label="Incurred on"
                     className={classes.textField}
                     views={["year", "month", "date"]}
                     value={expense.incurred_on}
                     onChange={handleDateChange(index)}
                     showTodayButton
-                />
-          </MuiPickersUtilsProvider>
-          <TextField label="Category" className={classes.textField} value={expense.category} onChange={handleChange('category', index)} margin="normal"/>
-          </div>
-          <TextField
-            label="Notes"
-            multiline
-            rows="2"
-            value={expense.notes}
-            onChange={handleChange('notes', index)}
-            className={classes.textField}
-            margin="normal"
-          />
-          <div className={classes.buttons}>
-          {
-            error && (<Typography component="p" color="error">
-              <Icon color="error" className={classes.error}>error</Icon>
-              {error}</Typography>)
-          }
-          {
-              saved && <Typography component="span" color="secondary" className={classes.status}>Saved</Typography>
-          }
-            <Button color="primary" variant="contained" onClick={()=> clickUpdate(index)} className={classes.submit}>Update</Button>
-            <DeleteExpense expense={expense} onRemove={removeExpense}/>
-          </div>    
-          </ExpansionPanelDetails>
-        </ExpansionPanel>
+                  />
+                </MuiPickersUtilsProvider>
+                <TextField label="Category" className={classes.textField} value={expense.category} onChange={handleChange('category', index)} margin="normal" />
+              </div>
+              <TextField
+                label="Notes"
+                multiline
+                rows="2"
+                value={expense.notes}
+                onChange={handleChange('notes', index)}
+                className={classes.textField}
+                margin="normal"
+              />
+              <div className={classes.buttons}>
+                {
+                  error && (<Typography component="p" color="error">
+                    <Icon color="error" className={classes.error}>error</Icon>
+                    {error}</Typography>)
+                }
+                {
+                  saved && <Typography component="span" color="secondary" className={classes.status}>Saved</Typography>
+                }
+                <Button color="primary" variant="contained" onClick={() => clickUpdate(index)} className={classes.submit}>Update</Button>
+                <DeleteExpense expense={expense} onRemove={removeExpense} />
+              </div>
+            </ExpansionPanelDetails>
+          </ExpansionPanel>
         </span>
-        })}
-      </div>
-    )
-  }
+      })}
+    </div>
+  )
+}

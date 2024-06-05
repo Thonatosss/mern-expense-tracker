@@ -140,7 +140,7 @@ export default function Home(){
                 </div>
                 <div style={{marginBottom: 3}}>
                 <Typography component="span" className={classes.val} style={{color:'#595555', fontSize:'1.15em'}}>${expense.mergedValues.average}</Typography>
-                <Typography component="span" className={classes.val} style={{color:'#002f6c', fontSize:'1.6em', backgroundColor: '#eafff5', padding: '8px 0'}}>${expense.mergedValues.total? expense.mergedValues.total : 0}</Typography>
+                    <Typography component="span" className={classes.val} style={{ color: '#002f6c', fontSize: '1.6em', backgroundColor: '#eafff5', padding: '8px 0' }}>${expense.mergedValues.total? expense.mergedValues.total : 0}</Typography>
                 <Typography component="span" className={classes.val} style={{color:'#484646', fontSize:'1.25em'}}>${expense.mergedValues.total? Math.abs(expense.mergedValues.total-expense.mergedValues.average) : expense.mergedValues.average}</Typography>
                 </div>
                 <Divider style={{marginBottom:10}}/>
